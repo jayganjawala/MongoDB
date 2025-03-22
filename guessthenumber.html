@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Number Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .game-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        #feedback {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Guess the Number Game</h1>
+        <p>Guess the number between 1 and 100. You have 10 turns to guess it.</p>
+        <input type="number" id="guess" placeholder="Enter your guess" min="1" max="100">
+        <button onclick="checkGuess()">Submit Guess</button>
+        <div id="feedback"></div>
+        <p>Previous guesses: <span id="previous-guesses"></span></p>
+        <p>Turns left: <span id="turns-left">10</span></p>
+   <button id="play-again-btn" style="display: none;" onclick="startGame()">Play Again</button>
+    </div>
+
+    <script>
+        let numberToGuess;
+        let turnsLeft;
+        let guesses;
+
+        function startGame() {
+            numberToGuess = Math.floor(Math.random() * 100) + 1;
+            turnsLeft = 10;
+            guesses = [];
+            document.getElementById('guess').value = '';
+            document.getElementById('feedback').textContent = '';
+            document.getElementById('previous-guesses').textContent = '';
+            document.getElementById('turns-left').textContent = turnsLeft;
+            document.getElementById('play-again-btn').style.display = 'none'; 
+        }
+
+        function checkGuess() {
+            const guess = parseInt(document.getElementById('guess').value);
+            if (isNaN(guess) || guess < 1 || guess > 100) {
+                alert("Please enter a valid number between 1 and 100.");
+                return;
+            }
+            guesses.push(guess);
+            turnsLeft--;
+            document.getElementById('turns-left').textContent = turnsLeft;
+            document.getElementById('previous-guesses').textContent = guesses.join(', ');
+            if (guess === numberToGuess) {
+                document.getElementById('feedback').textContent = `Congratulations! You guessed the number ${numberToGuess} correctly!`;
+                endGame();
+            } else if (guess < numberToGuess) {
+                document.getElementById('feedback').textContent = "Your guess is too low.";
+            } else {
+                document.getElementById('feedback').textContent = "Your guess is too high.";
+            }
+
+            if (turnsLeft === 0) {
+                document.getElementById('feedback').textContent = `Sorry, you've run out of turns. The number was ${numberToGuess}.`;
+                endGame();
+            }
+
+            document.getElementById('guess').value = '';
+        }
+
+        function endGame() {
+            document.getElementById('play-again-btn').style.display = 'inline-block';
+        }
+
+        window.onload = startGame;
+    </script>
+</body>
+</html>
